@@ -6,5 +6,12 @@
 */
 {
   "files": [],
-  "references": []
+  "references": [
+    {
+      "path": "./projects/ng-application-insights/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ng-application-insights/tsconfig.spec.json"
+    }
+]
 }
