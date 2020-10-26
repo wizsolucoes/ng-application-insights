@@ -1,11 +1,15 @@
 {
-  "name": "ng-application-insights",
+  "name": "@wizsolucoes/ng-application-insights",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^10.0.14",
-    "@angular/core": "^10.0.14"
+    "@angular/core": "^10.0.14",
+    "@microsoft/applicationinsights-web": "^2.5.9"
   },
   "dependencies": {
     "tslib": "^2.0.0"
+  },
+  "devDependencies": {
+    "@microsoft/applicationinsights-web": "^2.5.9"
   }
 }

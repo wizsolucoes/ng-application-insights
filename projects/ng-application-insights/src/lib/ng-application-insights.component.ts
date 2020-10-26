@@ -1,20 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'lib-ng-application-insights',
-  template: `
-    <p>
-      ng-application-insights works!
-    </p>
-  `,
-  styles: [
-  ]
+  template: ` <p>I only exist for testing navigation :)</p> `,
+  styles: [],
 })
-export class NgApplicationInsightsComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}
+export class NgApplicationInsightsComponent {}
