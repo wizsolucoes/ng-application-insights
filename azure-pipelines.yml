@@ -51,7 +51,7 @@ stages:
               command: "install"
               workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights/schematics'
 
-          - script: npx ng build ng-application-insights
+          - script: npx ng build ng-application-insights --prod
             displayName: 'Build lib'
           - task: Npm@1
             displayName: "Build"
