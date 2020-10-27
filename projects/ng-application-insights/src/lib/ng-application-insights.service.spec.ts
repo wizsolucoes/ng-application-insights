@@ -13,6 +13,7 @@ import {
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgApplicationInsightsComponent } from './ng-application-insights.component';
 import { Router } from '@angular/router';
+import { IExceptionTelemetry } from '@microsoft/applicationinsights-web';
 
 describe('NgApplicationInsightsService', () => {
   let router: Router;
@@ -61,17 +62,37 @@ describe('NgApplicationInsightsService', () => {
       expect(service.appInsights.trackPageView).toHaveBeenCalled();
     }));
 
-    it('should call trackPageView on navigation', fakeAsync(() => {
+    it('should create IExceptionTelemetry and call appInsights trackException', () => {
       // Given
+      const error = new Error('some error');
       spyOn(service.appInsights, 'trackException');
 
       // When
-      service.trackException(new Error('some error'));
+      service.trackException(error);
 
       // Then
-      tick();
-      expect(service.appInsights.trackException).toHaveBeenCalled();
-    }));
+      const exception: IExceptionTelemetry = {
+        exception: error,
+      };
+
+      expect(service.appInsights.trackException).toHaveBeenCalledWith(
+        exception
+      );
+    });
+
+    it('should call trackEvent with event and custom properties', () => {
+      // Given
+      spyOn(service.appInsights, 'trackEvent');
+
+      // When
+      service.trackEvent({ name: 'testEvent' }, { foo: 'bar' });
+
+      // Then
+      expect(service.appInsights.trackEvent).toHaveBeenCalledWith(
+        { name: 'testEvent' },
+        { foo: 'bar' }
+      );
+    });
   });
 
   describe('service is disabled', () => {
@@ -107,6 +128,14 @@ describe('NgApplicationInsightsService', () => {
     it('should NOT call appInsights trackException', fakeAsync(() => {
       // When
       service.trackException(new Error('test'));
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    }));
+
+    it('should NOT call appInsights trackEvent', fakeAsync(() => {
+      // When
+      service.trackEvent({ name: 'testEvent' }, { foo: 'bar' });
 
       // Then
       expect(service.appInsights).not.toBeTruthy();

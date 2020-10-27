@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   ApplicationInsights,
+  IEventTelemetry,
   IExceptionTelemetry,
 } from '@microsoft/applicationinsights-web';
 import { Router, NavigationEnd } from '@angular/router';
@@ -38,6 +39,15 @@ export class NgApplicationInsightsService {
   trackPageView(name?: string, uri?: string): void {
     if (this.config.enabled) {
       this.appInsights.trackPageView({ name, uri });
+    }
+  }
+
+  trackEvent(
+    event: IEventTelemetry,
+    customProperties?: { [key: string]: any }
+  ): void {
+    if (this.config.enabled) {
+      this.appInsights.trackEvent(event, customProperties);
     }
   }
 
