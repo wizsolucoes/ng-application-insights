@@ -8,14 +8,11 @@ import {
 
 @NgModule({
   declarations: [],
-  imports: [
-    BrowserModule,
-    NgApplicationInsightsModule.forRoot({
-      enabled: environment.production,
-      instrumentationKey = environment.appInsights.instrumentationKey,
-    }),
-  ],
-  providers: [{ provide: ErrorHandler, useClass: NgApplicationInsightsErrorHandler }],
-  bootstrap: []
+  imports: [NgApplicationInsightsModule.forRoot({
+      enabled: true,
+      instrumentationKey = '',
+    })],
+  bootstrap: [],
+  providers: [{ provide: ErrorHandler, useClass: NgApplicationInsightsErrorHandler }]
 })
 export class AppModule { }
