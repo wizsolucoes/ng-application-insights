@@ -23,10 +23,6 @@ export class NgApplicationInsightsService {
     private router: Router
   ) {
     if (this.config.enabled) {
-      console.log(
-        'NgApplicationInsightsService: this.config.enabled',
-        this.config.enabled
-      );
       this.appInsights = new ApplicationInsights({
         config: {
           instrumentationKey: this.config.instrumentationKey,
@@ -41,7 +37,6 @@ export class NgApplicationInsightsService {
 
   trackPageView(name?: string, uri?: string): void {
     if (this.config.enabled) {
-      console.log('NgApplicationInsightsService: uri', uri);
       this.appInsights.trackPageView({ name, uri });
     }
   }
@@ -51,7 +46,6 @@ export class NgApplicationInsightsService {
       exception: error,
     };
     if (this.config.enabled) {
-      console.log('NgApplicationInsightsService: error', error);
       this.appInsights.trackException(exception);
     }
   }
