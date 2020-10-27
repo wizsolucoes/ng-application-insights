@@ -17,17 +17,20 @@ import { Router } from '@angular/router';
 describe('NgApplicationInsightsService', () => {
   let router: Router;
   let service: NgApplicationInsightsService;
-
   let fixture: ComponentFixture<NgApplicationInsightsComponent>;
 
-  describe('service is disabled', () => {
+  describe('service is enabled', () => {
+    const mockAICOnfig = new NgApplicationInsightsConfig();
+    mockAICOnfig.enabled = true;
+    mockAICOnfig.instrumentationKey = '';
+
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [RouterTestingModule],
         providers: [
           {
             provide: NgApplicationInsightsConfig,
-            useValue: { enabled: true, instrumentationKey: '' },
+            useValue: mockAICOnfig,
           },
         ],
       });
@@ -71,14 +74,18 @@ describe('NgApplicationInsightsService', () => {
     }));
   });
 
-  describe('service is enabled', () => {
+  describe('service is disabled', () => {
+    const mockAICOnfig = new NgApplicationInsightsConfig();
+    mockAICOnfig.enabled = false;
+    mockAICOnfig.instrumentationKey = '';
+
     beforeEach(() => {
       TestBed.configureTestingModule({
         imports: [RouterTestingModule],
         providers: [
           {
             provide: NgApplicationInsightsConfig,
-            useValue: { enabled: false, instrumentationKey: '' },
+            useValue: mockAICOnfig,
           },
         ],
       });
@@ -88,5 +95,21 @@ describe('NgApplicationInsightsService', () => {
     it('should NOT instantiate ApplicationInsights when constucted', () => {
       expect(service.appInsights).not.toBeTruthy();
     });
+
+    it('should NOT call appInsights trackPageView', fakeAsync(() => {
+      // When
+      service.trackPageView('test', '/test');
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    }));
+
+    it('should NOT call appInsights trackException', fakeAsync(() => {
+      // When
+      service.trackException(new Error('test'));
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    }));
   });
 });
