@@ -1,6 +1,6 @@
 {
   "name": "@wizsolucoes/ng-application-insights",
-  "version": "0.0.1",
+  "version": "1.0.0-alpha.0",
   "scripts": {
     "build": "../../node_modules/.bin/tsc -p tsconfig.schematics.json",
     "copy:collection": "cp schematics/src/collection.json ../../dist/ng-application-insights/schematics/src/collection.json",
