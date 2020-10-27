@@ -1,0 +1,52 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  batch: 'true'
+
+pool:
+  vmImage: "ubuntu-latest"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        displayName: "Build and test"
+        condition: succeeded()
+        steps:
+          - task: Npm@1
+            displayName: "Install dependencies"
+            inputs:
+              command: "install"
+          - task: Npm@1
+            displayName: "Build"
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "run build"
+  - stage: Publish
+    condition: eq(variables['build.sourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: Publish
+        displayName: "Publish"
+        condition: succeeded()
+        steps:
+          - task: Npm@1
+            displayName: "Install dependencies"
+            inputs:
+              command: "install"
+          - task: Npm@1
+            displayName: "Build"
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "run build"
+          - task: Npm@1
+            displayName: "Publish"
+            inputs:
+              command: "custom"
+              verbose: true
+              customCommand: "publish"
+              customEndpoint: "npmjs"
