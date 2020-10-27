@@ -6,11 +6,9 @@
 trigger:
   batch: 'true'
 
-pool:
-  vmImage: "ubuntu-latest"
-
 stages:
   - stage: Build
+    pool: 'Wiz Hosted Ubuntu 1604'
     condition: ne(variables['build.sourceBranch'], 'refs/heads/feature/schematics')
     jobs:
       - job: Build
@@ -28,6 +26,7 @@ stages:
               verbose: true
               customCommand: "run build"
   - stage: Publish
+    pool: 'Wiz Hosted Ubuntu 1604'
     condition: eq(variables['build.sourceBranch'], 'refs/heads/feature/schematics')
     jobs:
       - job: Publish
