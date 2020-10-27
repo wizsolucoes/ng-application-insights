@@ -35,10 +35,24 @@ stages:
         condition: succeeded()
         steps:
           - task: Npm@1
-            displayName: "Install dependencies"
+            displayName: "Install root dependencies"
             inputs:
               command: "install"
+          - script: ls
+            workingDirectory: $(Build.SourcesDirectory)
+          - task: Npm@1
+            displayName: "Install lib dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+          - task: Npm@1
+            displayName: "Install schematics dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights/schematics'
+
           - script: npx ng build ng-application-insights
+            displayName: 'Build lib'
           - task: Npm@1
             displayName: "Build"
             inputs:
