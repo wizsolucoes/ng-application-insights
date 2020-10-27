@@ -5,7 +5,8 @@ import { Rule, SchematicContext, Tree, chain } from '@angular-devkit/schematics'
 import { InsertChange } from '@schematics/angular/utility/change';
 import {
   addImportToModule,
-  addProviderToModule
+  addProviderToModule,
+  insertImport,
 } from '@schematics/angular/utility/ast-utils';
 
 
@@ -44,6 +45,14 @@ function installAppInsights() {
 
     const updateRecorder = tree.beginUpdate(filePath);
 
+    const insertErrorHandlerChange = insertImport(
+      source,
+      filePath,
+      'ErrorHandler',
+      '@angular/core',
+      false
+    );
+
     const importChanges = addImportToModule(
       source,
       filePath,
@@ -60,6 +69,13 @@ function installAppInsights() {
       '{ provide: ErrorHandler, useClass: NgApplicationInsightsErrorHandler }',
       '@wizsolucoes/ng-application-insights',
     ) as InsertChange[];
+
+    if (insertErrorHandlerChange instanceof InsertChange) {
+      updateRecorder.insertRight(
+        insertErrorHandlerChange.pos,
+        insertErrorHandlerChange.toAdd
+      );
+    }
 
     for (const change of importChanges) {
       if (change instanceof InsertChange) {

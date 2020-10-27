@@ -32,11 +32,15 @@ function installAppInsights() {
         const filePath = './src/app/app.module.ts';
         const source = ts.createSourceFile(filePath, fs_1.readFileSync(filePath, { encoding: 'utf-8' }), ts.ScriptTarget.Latest, true);
         const updateRecorder = tree.beginUpdate(filePath);
+        const insertErrorHandlerChange = ast_utils_1.insertImport(source, filePath, 'ErrorHandler', '@angular/core', false);
         const importChanges = ast_utils_1.addImportToModule(source, filePath, `NgApplicationInsightsModule.forRoot({
       enabled: true,
       instrumentationKey: '',
     })`, '@wizsolucoes/ng-application-insights');
         const providerChanges = ast_utils_1.addProviderToModule(source, filePath, '{ provide: ErrorHandler, useClass: NgApplicationInsightsErrorHandler }', '@wizsolucoes/ng-application-insights');
+        if (insertErrorHandlerChange instanceof change_1.InsertChange) {
+            updateRecorder.insertRight(insertErrorHandlerChange.pos, insertErrorHandlerChange.toAdd);
+        }
         for (const change of importChanges) {
             if (change instanceof change_1.InsertChange) {
                 updateRecorder.insertLeft(change.pos, change.toAdd);
@@ -53,7 +57,7 @@ function installAppInsights() {
 }
 function fixImports() {
     return (tree, _context) => {
-        var _a;
+        var _a, _b;
         const filePath = './src/app/app.module.ts';
         const code = (_a = tree.read(filePath)) === null || _a === void 0 ? void 0 : _a.toString('utf-8');
         if (code) {
@@ -67,6 +71,7 @@ function fixImports() {
 } from '@wizsolucoes/ng-application-insights';`);
             tree.overwrite(filePath, newCode);
         }
+        console.log((_b = tree.read(filePath)) === null || _b === void 0 ? void 0 : _b.toString('utf-8'));
         return tree;
     };
 }
