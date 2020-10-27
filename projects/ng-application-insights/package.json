@@ -3,10 +3,8 @@
   "version": "0.0.1",
   "scripts": {
     "build": "../../node_modules/.bin/tsc -p tsconfig.schematics.json",
-    "copy:schemas": "cp --parents schematics/*/schema.json ../../dist/ng-application-insights/",
-    "copy:files": "cp --parents -p schematics/*/files/** ../../dist/ng-application-insights/",
-    "copy:collection": "cp schematics/collection.json ../../dist/ng-application-insights/schematics/collection.json",
-    "postbuild": "npm run copy:schemas && npm run copy:files && npm run copy:collection"
+    "copy:collection": "cp schematics/src/collection.json ../../dist/ng-application-insights/schematics/src/collection.json",
+    "postbuild": "npm run copy:collection"
   },
   "peerDependencies": {
     "@angular/common": "^10.0.14",
@@ -19,7 +17,7 @@
   "devDependencies": {
     "@microsoft/applicationinsights-web": "^2.5.9"
   },
-  "schematics": "../ng-application-insights-schematic/src/collection.json",
+  "schematics": "./schematics/src/collection.json",
   "ng-add": {
     "save": "dependencies"
   }

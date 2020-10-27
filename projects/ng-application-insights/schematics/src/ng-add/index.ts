@@ -48,8 +48,8 @@ function installAppInsights() {
       source,
       filePath,
       `NgApplicationInsightsModule.forRoot({
-      enabled: environment.production,
-      instrumentationKey = environment.appInsights.instrumentationKey,
+      enabled: true,
+      instrumentationKey = '',
     })`,
       '@wizsolucoes/ng-application-insights',
     ) as InsertChange[];
