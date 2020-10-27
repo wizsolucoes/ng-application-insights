@@ -11,6 +11,7 @@ pool:
 
 stages:
   - stage: Build
+    condition: ne(variables['build.sourceBranch'], 'refs/heads/feature/schematics')
     jobs:
       - job: Build
         displayName: "Build and test"
@@ -27,7 +28,7 @@ stages:
               verbose: true
               customCommand: "run build"
   - stage: Publish
-    condition: eq(variables['build.sourceBranch'], 'refs/heads/main')
+    condition: eq(variables['build.sourceBranch'], 'refs/heads/feature/schematics')
     jobs:
       - job: Publish
         displayName: "Publish"
@@ -37,12 +38,14 @@ stages:
             displayName: "Install dependencies"
             inputs:
               command: "install"
+          - script: npx ng build ng-application-insights
           - task: Npm@1
             displayName: "Build"
             inputs:
               command: custom
               verbose: true
               customCommand: "run build"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
           - task: Npm@1
             displayName: "Publish"
             inputs:
@@ -50,3 +53,4 @@ stages:
               verbose: true
               customCommand: "publish"
               customEndpoint: "npmjs"
+              workingDir: '$(Build.SourcesDirectory)/dist/ng-application-insights'
