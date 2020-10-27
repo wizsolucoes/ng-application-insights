@@ -3,5 +3,5 @@
  */
 
 export * from './lib/ng-application-insights.service';
-export * from './lib/ng-application-insights.component';
+export * from './lib/ng-application-insights-error-handler.service';
 export * from './lib/ng-application-insights.module';
