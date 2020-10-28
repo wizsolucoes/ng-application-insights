@@ -1,0 +1,9 @@
+{
+  "$schema": "../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Wiz NG Application Insights Schematic",
+      "factory": "./ng-add/index#main"
+    }
+  }
+}

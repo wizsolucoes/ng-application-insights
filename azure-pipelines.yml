@@ -1,0 +1,69 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  batch: 'true'
+
+stages:
+  - stage: Build
+    pool: 'Wiz Hosted Ubuntu 1604'
+    condition: ne(variables['build.sourceBranch'], 'refs/heads/feature/schematics')
+    jobs:
+      - job: Build
+        displayName: "Build and test"
+        condition: succeeded()
+        steps:
+          - task: Npm@1
+            displayName: "Install dependencies"
+            inputs:
+              command: "install"
+          - task: Npm@1
+            displayName: "Build"
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "run build"
+  - stage: Publish
+    pool: 'Wiz Hosted Ubuntu 1604'
+    condition: eq(variables['build.sourceBranch'], 'refs/heads/feature/schematics')
+    jobs:
+      - job: Publish
+        displayName: "Publish"
+        condition: succeeded()
+        steps:
+          - task: Npm@1
+            displayName: "Install root dependencies"
+            inputs:
+              command: "install"
+          - script: ls
+            workingDirectory: $(Build.SourcesDirectory)
+          - task: Npm@1
+            displayName: "Install lib dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+          - task: Npm@1
+            displayName: "Install schematics dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights/schematics'
+
+          - script: npx ng build ng-application-insights --prod
+            displayName: 'Build lib'
+          - task: Npm@1
+            displayName: "Build"
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "run build"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+          - task: Npm@1
+            displayName: "Publish"
+            inputs:
+              command: "custom"
+              verbose: true
+              customCommand: "publish"
+              customEndpoint: "npmjs"
+              workingDir: '$(Build.SourcesDirectory)/dist/ng-application-insights'
