@@ -7,6 +7,7 @@ const tasks_1 = require("@angular-devkit/schematics/tasks");
 const schematics_1 = require("@angular-devkit/schematics");
 const change_1 = require("@schematics/angular/utility/change");
 const ast_utils_1 = require("@schematics/angular/utility/ast-utils");
+const dependencies_1 = require("@schematics/angular/utility/dependencies");
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
 function main(_options) {
@@ -21,7 +22,15 @@ function main(_options) {
 exports.main = main;
 function fetchAppInsights() {
     return (tree, _context) => {
+        var _a;
         if (tree.exists('package.json')) {
+            const appInsights = {
+                name: '@microsoft/applicationinsights-web',
+                type: dependencies_1.NodeDependencyType.Default,
+                version: '^2.5.9',
+            };
+            dependencies_1.addPackageJsonDependency(tree, appInsights);
+            console.log((_a = tree.read('package.json')) === null || _a === void 0 ? void 0 : _a.toString('utf-8'));
             _context.addTask(new tasks_1.NodePackageInstallTask());
         }
         return tree;
@@ -57,7 +66,7 @@ function installAppInsights() {
 }
 function fixImports() {
     return (tree, _context) => {
-        var _a, _b;
+        var _a;
         const filePath = './src/app/app.module.ts';
         const code = (_a = tree.read(filePath)) === null || _a === void 0 ? void 0 : _a.toString('utf-8');
         if (code) {
@@ -71,7 +80,6 @@ function fixImports() {
 } from '@wizsolucoes/ng-application-insights';`);
             tree.overwrite(filePath, newCode);
         }
-        console.log((_b = tree.read(filePath)) === null || _b === void 0 ? void 0 : _b.toString('utf-8'));
         return tree;
     };
 }

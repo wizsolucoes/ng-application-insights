@@ -8,7 +8,11 @@ import {
   addProviderToModule,
   insertImport,
 } from '@schematics/angular/utility/ast-utils';
-
+import {
+  NodeDependency,
+  NodeDependencyType,
+  addPackageJsonDependency,
+} from '@schematics/angular/utility/dependencies';
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
@@ -25,6 +29,16 @@ export function main(_options: any): Rule {
 function fetchAppInsights() {
   return (tree: Tree, _context: SchematicContext) => {
     if (tree.exists('package.json')) {
+      const appInsights: NodeDependency = {
+        name: '@microsoft/applicationinsights-web',
+        type: NodeDependencyType.Default,
+        version: '^2.5.9',
+      };
+
+      addPackageJsonDependency(tree, appInsights);
+
+      console.log(tree.read('package.json')?.toString('utf-8'));
+
       _context.addTask(new NodePackageInstallTask());
     }
 
