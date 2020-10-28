@@ -1,11 +1,11 @@
 {
-  "name": "@wizsolucoes/ng-application-insights",
+  "name": "ng-application-insights",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
+    "build": "ng build ng-application-insights && cd projects/ng-application-insights && npm run build",
+    "test": "ng test --no-watch",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -28,9 +28,9 @@
     "@angular-devkit/build-ng-packagr": "~0.1000.8",
     "@angular/cli": "~10.0.6",
     "@angular/compiler-cli": "~10.0.9",
-    "@types/node": "^12.11.1",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~5.0.0",

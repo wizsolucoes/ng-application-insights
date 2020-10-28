@@ -1,6 +1,15 @@
 {
   "name": "@wizsolucoes/ng-application-insights",
-  "version": "0.0.1",
+  "version": "1.0.0",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "../../node_modules/.bin/tsc -p tsconfig.schematics.json",
+    "copy:collection": "cp schematics/collection.json ../../dist/ng-application-insights/schematics/collection.json",
+    "postbuild": "npm run copy:collection"
+  },
   "peerDependencies": {
     "@angular/common": "^10.0.14",
     "@angular/core": "^10.0.14",
@@ -11,5 +20,9 @@
   },
   "devDependencies": {
     "@microsoft/applicationinsights-web": "^2.5.9"
+  },
+  "schematics": "./schematics/collection.json",
+  "ng-add": {
+    "save": "dependencies"
   }
 }

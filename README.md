@@ -1,27 +1,91 @@
-# NgApplicationInsights (WIP)
+# Wiz NgApplicationInsights
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.0.6.
+Adicione o Microsoft Application Insights ao seu comando com apenas um comando. 
 
-## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Sobre
+Este schematic irá instalar o pacote `@wizsolucoes/ng-application-insights`, bem como suas dependências de pares e modificar o arquivo `app.module.ts` para usar o pacote.
 
-## Code scaffolding
+## Uso
+Basta executar o schematic na raiz do seu projeto Angular:
+```bash
+ng add @wizsolucoes/ng-application-insights
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Configuração
+Após a finalização da execução do schematic, deve-se customizar o objeto de configuração no módulo que foi importado pelo schematic em `app.module.ts`. Exemplo:
 
-## Build
+```typescript
+@NgModule({
+  // ...
+  imports: [
+    NgApplicationInsightsModule.forRoot({
+      // Booleano para hablitar Application Insights.
+      // Típicamente "false" em ambientes de desenvolvimento e "true" em ambientes de produção.
+      // Sugestão: environment.production
+      enabled: environment.production,
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+      // String que corresponda à chave de instrumentação da Application Insights.
+      instrumentationKey: 'sua-chave-aqui',
+    }),
+  ],
+```
 
-## Running unit tests
+## Desenvolvimento, por onde começar
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+# Instalar dependências
+npm install
 
-## Running end-to-end tests
+cd projects/ng-application-insights
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+npm install
 
-## Further help
+cd schematics
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+npm install
+
+cd ../../../
+
+# Build Lib + Schematics
+npm run build
+
+# Executar os testes
+npm test
+```
+
+### Testando Lib + Schematics localmente
+
+1. Gere um distribuível da lib e do schematics
+
+```bash
+# Instalar dependências
+npm install
+
+cd projects/ng-application-insights
+
+npm install
+
+cd schematics
+
+npm install
+
+cd ../../../
+
+# Build Lib + Schematics
+npm run build
+
+# Gerar tarball e.g. wizsolucoes-ng-application-insights-1.0.0.tgz
+cd dist/
+
+npm pack
+```
+
+2. Instale e execute o schematic na raiz de qualquer aplicação
+```bash
+# Instalar lib + schematics
+npm i --no-save ../path/to/ng-application-insights/wizsolucoes-ng-application-insights-1.0.0.tgz
+
+# Executar o schematic
+ng g @wizsolucoes/ng-application-insights:ng-add
+```

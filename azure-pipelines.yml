@@ -10,39 +10,40 @@ pool:
   vmImage: "ubuntu-latest"
 
 stages:
-  - stage: Build
-    jobs:
-      - job: Build
-        displayName: "Build and test"
-        condition: succeeded()
-        steps:
-          - task: Npm@1
-            displayName: "Install dependencies"
-            inputs:
-              command: "install"
-          - task: Npm@1
-            displayName: "Build"
-            inputs:
-              command: custom
-              verbose: true
-              customCommand: "run build"
   - stage: Publish
     condition: eq(variables['build.sourceBranch'], 'refs/heads/main')
     jobs:
       - job: Publish
         displayName: "Publish"
-        condition: succeeded()
         steps:
+          # Install
           - task: Npm@1
-            displayName: "Install dependencies"
+            displayName: "Install root dependencies"
             inputs:
               command: "install"
           - task: Npm@1
-            displayName: "Build"
+            displayName: "Install library dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+          - task: Npm@1
+            displayName: "Install schematics dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights/schematics'
+
+          # Build
+          - script: npx ng build ng-application-insights --prod
+            displayName: 'Build library'
+          - task: Npm@1
+            displayName: "Build package"
             inputs:
               command: custom
               verbose: true
               customCommand: "run build"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+
+          # Publish
           - task: Npm@1
             displayName: "Publish"
             inputs:
@@ -50,3 +51,4 @@ stages:
               verbose: true
               customCommand: "publish"
               customEndpoint: "npmjs"
+              workingDir: '$(Build.SourcesDirectory)/dist/ng-application-insights'
