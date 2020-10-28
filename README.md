@@ -1,40 +1,32 @@
 # Wiz NgApplicationInsights
 
-Adicione o Microsoft Application Insights ao seu comando com apenas um comando.
+Adicione o Microsoft Application Insights ao seu comando com apenas um comando. 
 
-## Instalação e Configuração
 
-Para adicionar o Application Insights ao projeto, basta executar o comando:
+## Sobre
+Este schematic irá instalar o pacote `@wizsolucoes/ng-application-insights`, bem como suas dependências de pares e modificar o arquivo `app.module.ts` para usar o pacote.
 
+## Uso
+Basta executar o schematic na raiz do seu projeto Angular:
 ```bash
 ng add @wizsolucoes/ng-application-insights
 ```
 
-Após a instalação dos pacotes e finalização da execução do Schematics, deve-se criar um objeto de configuração. Exemplo:
+### Configuração
+Após a finalização da execução do schematic, deve-se customizar o objeto de configuração no módulo que foi importado pelo schematic em `app.module.ts`. Exemplo:
 
 ```typescript
-const ngApplicationInsightsConfig = {
-  enabled: true,
-  appInsightsConfig: {
-    instrumentationKey: 'YOUR-APPLICATION-INSIGHTS-INSTRUMENTATION-KEY',
-  }
-}
-```
-
-Por fim, com o objeto de configuração criado, deve-se adicionar as configurações a declaração do modulo no arquivo 'app.module.ts' do projeto:
-
-```typescript
-/* app.module.ts */
-import OBJETO_DE_CONFIGURACAO from 'path_para_objeto_configuracao';
-
-// ...
-
 @NgModule({
   // ...
   imports: [
     NgApplicationInsightsModule.forRoot({
-      enabled: OBJETO_DE_COFIGURACAO.enabled,
-      instrumentationKey: OBJETO_DE_CONFIGURACAO.appInsightsConfig.instrumentationKey,
+      // Booleano para hablitar Application Insights.
+      // Típicamente "false" em ambientes de desenvolvimento e "true" em ambientes de produção.
+      // Sugestão: environment.production
+      enabled: environment.production,
+
+      // String que corresponda à chave de instrumentação da Application Insights.
+      instrumentationKey: 'sua-chave-aqui',
     }),
   ],
 ```
