@@ -1,6 +1,6 @@
 # Wiz NgApplicationInsights
 
-Adicione o Microsoft Application Insights ao seu comando com apenas um comando. 
+Adicione o Microsoft Application Insights à sua aplicação com apenas um comando. 
 
 
 ## Sobre
