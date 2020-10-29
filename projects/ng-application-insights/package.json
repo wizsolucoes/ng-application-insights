@@ -8,7 +8,8 @@
   "scripts": {
     "build": "../../node_modules/.bin/tsc -p tsconfig.schematics.json",
     "copy:collection": "cp schematics/collection.json ../../dist/ng-application-insights/schematics/collection.json",
-    "postbuild": "npm run copy:collection"
+    "copy:readme": "cp ../../README.md ../../dist/ng-application-insights",
+    "postbuild": "npm run copy:collection && npm run copy:readme"
   },
   "peerDependencies": {
     "@angular/common": "^10.0.14",

@@ -7,9 +7,7 @@
     "build": "ng build ng-application-insights && cd projects/ng-application-insights && npm run build",
     "test": "ng test --no-watch",
     "lint": "ng lint",
-    "e2e": "ng e2e",
-    "copy:readme": "cp README.md dist/ng-application-insights",
-    "postbuild": "npm run copy:readme"
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
