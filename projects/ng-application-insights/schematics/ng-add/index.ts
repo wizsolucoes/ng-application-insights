@@ -37,8 +37,6 @@ function fetchAppInsights() {
 
       addPackageJsonDependency(tree, appInsights);
 
-      console.log(tree.read('package.json')?.toString('utf-8'));
-
       _context.addTask(new NodePackageInstallTask());
     }
 
