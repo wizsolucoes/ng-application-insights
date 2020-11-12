@@ -22,7 +22,6 @@ function main(_options) {
 exports.main = main;
 function fetchAppInsights() {
     return (tree, _context) => {
-        var _a;
         if (tree.exists('package.json')) {
             const appInsights = {
                 name: '@microsoft/applicationinsights-web',
@@ -30,7 +29,6 @@ function fetchAppInsights() {
                 version: '^2.5.9',
             };
             dependencies_1.addPackageJsonDependency(tree, appInsights);
-            console.log((_a = tree.read('package.json')) === null || _a === void 0 ? void 0 : _a.toString('utf-8'));
             _context.addTask(new tasks_1.NodePackageInstallTask());
         }
         return tree;

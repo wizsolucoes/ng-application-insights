@@ -16,7 +16,7 @@ const collectionPath = path.join(__dirname, '../collection.json');
 describe('ng-application-insights-schematic', () => {
     it('works', () => __awaiter(void 0, void 0, void 0, function* () {
         const runner = new testing_1.SchematicTestRunner('schematics', collectionPath);
-        const tree = yield runner.runSchematicAsync('ng-application-insights-schematic', {}, schematics_1.Tree.empty()).toPromise();
+        const tree = yield runner.runSchematicAsync('ng-add', {}, schematics_1.Tree.empty()).toPromise();
         expect(tree.files).toEqual([]);
     }));
 });
