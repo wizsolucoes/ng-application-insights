@@ -1,5 +1,4 @@
 import * as ts from 'typescript';
-import { readFileSync } from 'fs';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { Rule, SchematicContext, Tree, chain, SchematicsException } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
@@ -63,7 +62,7 @@ function installAppInsights() {
 
     const source = ts.createSourceFile(
       filePath,
-      readFileSync(filePath, { encoding: 'utf-8' }),
+      tree.read(filePath)!.toString('utf-8'),
       ts.ScriptTarget.Latest,
       true,
     );
@@ -133,9 +132,7 @@ function fixImports() {
       instrumentationKey: '',
     }) } from '@wizsolucoes/ng-application-insights';`,
         '',
-      );
-
-      newCode = newCode.replace(
+      ).replace(
         "import { { provide: ErrorHandler, useClass: NgApplicationInsightsErrorHandler } } from '@wizsolucoes/ng-application-insights';",
         `import {
   NgApplicationInsightsModule,
