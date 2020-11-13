@@ -1,7 +1,6 @@
 import * as ts from 'typescript';
-import { readFileSync } from 'fs';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
-import { Rule, SchematicContext, Tree, chain } from '@angular-devkit/schematics';
+import { Rule, SchematicContext, Tree, chain, SchematicsException } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
 import {
   addImportToModule,
@@ -13,16 +12,29 @@ import {
   NodeDependencyType,
   addPackageJsonDependency,
 } from '@schematics/angular/utility/dependencies';
+import { createDefaultPath } from "@schematics/angular/utility/workspace";
+
+let defaultPath: string;
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
 export function main(_options: any): Rule {
-  return (tree: Tree, _context: SchematicContext) => {
+  return async (tree: Tree, _context: SchematicContext) => {
+    const workspaceConfigBuffer = tree.read("angular.json");
+
+    if (!workspaceConfigBuffer)
+      throw new SchematicsException("Not an Angular CLI workspace");
+
+    const workspaceConfig = JSON.parse(workspaceConfigBuffer.toString());
+    const projectName = _options.project || workspaceConfig.defaultProject;
+
+    defaultPath = await createDefaultPath(tree, projectName);
+
     return chain([
       fetchAppInsights(),
       installAppInsights(),
       fixImports(),
-    ])(tree, _context);
+    ]);
   };
 }
 
@@ -46,11 +58,11 @@ function fetchAppInsights() {
 
 function installAppInsights() {
   return (tree: Tree, _context: SchematicContext) => {
-    const filePath = './src/app/app.module.ts';
+    const filePath = `${defaultPath.concat('/app.module.ts')}`;
 
     const source = ts.createSourceFile(
       filePath,
-      readFileSync(filePath, { encoding: 'utf-8' }),
+      tree.read(filePath)!.toString('utf-8'),
       ts.ScriptTarget.Latest,
       true,
     );
@@ -109,7 +121,7 @@ function installAppInsights() {
 
 function fixImports() {
   return (tree: Tree, _context: SchematicContext) => {
-    const filePath = './src/app/app.module.ts';
+    const filePath = `${defaultPath.concat('/app.module.ts')}`;
 
     const code = tree.read(filePath)?.toString('utf-8');
 
@@ -120,9 +132,7 @@ function fixImports() {
       instrumentationKey: '',
     }) } from '@wizsolucoes/ng-application-insights';`,
         '',
-      );
-
-      newCode = newCode.replace(
+      ).replace(
         "import { { provide: ErrorHandler, useClass: NgApplicationInsightsErrorHandler } } from '@wizsolucoes/ng-application-insights';",
         `import {
   NgApplicationInsightsModule,

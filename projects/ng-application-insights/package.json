@@ -1,12 +1,12 @@
 {
   "name": "@wizsolucoes/ng-application-insights",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "../../node_modules/.bin/tsc -p tsconfig.schematics.json",
+    "build": "tsc -p tsconfig.schematics.json",
     "copy:collection": "cp schematics/collection.json ../../dist/ng-application-insights/schematics/collection.json",
     "copy:readme": "cp ../../README.md ../../dist/ng-application-insights",
     "postbuild": "npm run copy:collection && npm run copy:readme"
