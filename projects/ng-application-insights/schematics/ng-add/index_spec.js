@@ -9,15 +9,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const schematics_1 = require("@angular-devkit/schematics");
 const testing_1 = require("@angular-devkit/schematics/testing");
 const path = require("path");
-const collectionPath = path.join(__dirname, '../collection.json');
+const collectionPath = path.join(__dirname, "../collection.json");
+const runner = new testing_1.SchematicTestRunner("schematics", collectionPath);
 describe('ng-application-insights-schematic', () => {
+    let appTree;
+    beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        // Run ng g workspace schematic
+        appTree = yield runner
+            .runExternalSchematicAsync("@schematics/angular", "workspace", { name: "test", version: "10.0.5" }, appTree)
+            .toPromise();
+        // Run ng g application schematic
+        appTree = yield runner
+            .runExternalSchematicAsync("@schematics/angular", "application", { name: "my-app", style: 'scss' }, appTree)
+            .toPromise();
+    }));
     it('works', () => __awaiter(void 0, void 0, void 0, function* () {
-        const runner = new testing_1.SchematicTestRunner('schematics', collectionPath);
-        const tree = yield runner.runSchematicAsync('ng-add', {}, schematics_1.Tree.empty()).toPromise();
-        expect(tree.files).toEqual([]);
+        const tree = yield runner.runSchematicAsync("ng-add", {}, appTree).toPromise();
+        const appModules = tree.read('/my-app/src/app/app.module.ts').toString();
+        expect(appModules).toContain(`import {
+  NgApplicationInsightsModule,
+  NgApplicationInsightsErrorHandler,
+} from '@wizsolucoes/ng-application-insights';`);
+        expect(appModules).toContain(`NgApplicationInsightsModule.forRoot({
+      enabled: true,
+      instrumentationKey: '',
+    })`);
+        expect(appModules).toContain(`[{ provide: ErrorHandler, useClass: NgApplicationInsightsErrorHandler }],`);
     }));
 });
 //# sourceMappingURL=index_spec.js.map
