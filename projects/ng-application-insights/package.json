@@ -1,9 +1,14 @@
 {
   "name": "@wizsolucoes/ng-application-insights",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "publishConfig": {
     "access": "public"
+  },
+  "homepage": "https://github.com/wizsolucoes/ng-application-insights#Wiz-NgApplicationInsights",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wizsolucoes/ng-application-insights"
   },
   "scripts": {
     "build": "tsc -p tsconfig.schematics.json",

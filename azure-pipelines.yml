@@ -10,6 +10,49 @@ pool:
   vmImage: "ubuntu-latest"
 
 stages:
+  - stage: Build
+    condition: ne(variables['build.sourceBranch'], 'refs/heads/main')
+    jobs:
+      - job: Build
+        displayName: "Build and test"
+        condition: succeeded()
+        steps:
+          # Install
+          - task: Npm@1
+            displayName: "Install root dependencies"
+            inputs:
+              command: "install"
+          - task: Npm@1
+            displayName: "Install library dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+          - task: Npm@1
+            displayName: "Install schematics dependencies"
+            inputs:
+              command: "install"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights/schematics'
+
+          # Build
+          - script: npx ng build ng-application-insights --prod
+            displayName: 'Build library'
+          - task: Npm@1
+            displayName: "Build package"
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "run build"
+              workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+
+          # Test
+          - task: Npm@1
+            displayName: "Test"
+            inputs:
+              command: "custom"
+              verbose: true
+              customCommand: "test"
+              workingDir: '$(Build.SourcesDirectory)'
+
   - stage: Publish
     condition: eq(variables['build.sourceBranch'], 'refs/heads/main')
     jobs:
@@ -42,6 +85,15 @@ stages:
               verbose: true
               customCommand: "run build"
               workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
+
+          # Test
+          - task: Npm@1
+            displayName: "Test"
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "test"
+              workingDir: '$(Build.SourcesDirectory)'
 
           # Publish
           - task: Npm@1
