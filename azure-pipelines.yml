@@ -43,6 +43,15 @@ stages:
               customCommand: "run build"
               workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights'
 
+          # Test
+          - task: Npm@1
+            displayName: "Test"
+            inputs:
+              command: custom
+              verbose: true
+              customCommand: "test"
+              workingDir: '$(Build.SourcesDirectory)'
+
           # Publish
           - task: Npm@1
             displayName: "Publish"
