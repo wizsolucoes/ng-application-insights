@@ -1,7 +1,7 @@
 # Outputs
-ng-add/**/*.js
-ng-add/**/*.js.map
-ng-add/**/*.d.ts
+*/**/*.js
+*/**/*.js.map
+*/**/*.d.ts
 
 # IDEs
 .idea/
