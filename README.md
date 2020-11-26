@@ -27,8 +27,27 @@ Após a finalização da execução do schematic, deve-se customizar o objeto de
 
       // String que corresponda à chave de instrumentação da Application Insights.
       instrumentationKey: 'sua-chave-aqui',
+
+      // Booleano para determinar se a aplicação é 'White Label'. Default: false
+      whiteLabel: false,
     }),
   ],
+```
+
+No caso de aplicações 'White Label', é necessário configurar o valor do 'Tenant ID' para o AppInsights. Um exemplo de como configurar o 'Tenant ID', é
+alterar a função 'loadConfiguration()' no arquivo `app.component.ts`:
+
+```typescript
+private loadConfiguration(): Observable<AppConfiguration> {
+  this.configurationService.tenantId = this.whoami();
+
+  // tenantId é configurado para utilização do AppInsights
+  this.errorHandler.setTenantIdForApplication(
+    this.configurationService.tenantId
+  );
+
+  return this.configurationService.getConfig();
+}
 ```
 
 ## Desenvolvimento, por onde começar
