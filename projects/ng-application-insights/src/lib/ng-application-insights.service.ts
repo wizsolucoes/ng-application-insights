@@ -11,6 +11,7 @@ import { filter } from 'rxjs/operators';
 export class NgApplicationInsightsConfig {
   enabled = true;
   instrumentationKey = '';
+  whiteLabel = false;
 }
 
 @Injectable({
@@ -18,6 +19,7 @@ export class NgApplicationInsightsConfig {
 })
 export class NgApplicationInsightsService {
   appInsights: ApplicationInsights;
+  private tenantId: String = null;
 
   constructor(
     private config: NgApplicationInsightsConfig,
@@ -38,7 +40,11 @@ export class NgApplicationInsightsService {
 
   trackPageView(name?: string, uri?: string): void {
     if (this.config.enabled) {
-      this.appInsights.trackPageView({ name, uri });
+      this.appInsights.trackPageView({
+        name,
+        uri,
+        properties: { 'Tenant ID': this.tenantId }
+      });
     }
   }
 
@@ -47,6 +53,7 @@ export class NgApplicationInsightsService {
     customProperties?: { [key: string]: any }
   ): void {
     if (this.config.enabled) {
+      customProperties['Tenant ID'] = this.tenantId;
       this.appInsights.trackEvent(event, customProperties);
     }
   }
@@ -54,10 +61,16 @@ export class NgApplicationInsightsService {
   trackException(error: Error): void {
     const exception: IExceptionTelemetry = {
       exception: error,
+      properties: { 'Tenant ID': this.tenantId },
     };
     if (this.config.enabled) {
       this.appInsights.trackException(exception);
     }
+  }
+
+  setTenantId(tenantId: String): void {
+    if (this.config.whiteLabel)
+      this.tenantId = tenantId;
   }
 
   private createRouterSubscription(): void {
