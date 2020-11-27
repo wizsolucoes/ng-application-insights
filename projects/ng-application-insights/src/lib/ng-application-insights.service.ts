@@ -7,6 +7,10 @@ import {
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
+interface ICustomProperties {
+  [key: string]: any;
+}
+
 @Injectable()
 export class NgApplicationInsightsConfig {
   enabled = true;
@@ -19,7 +23,7 @@ export class NgApplicationInsightsConfig {
 })
 export class NgApplicationInsightsService {
   appInsights: ApplicationInsights;
-  private tenantId: String = null;
+  private customProperties: ICustomProperties = {};
 
   constructor(
     private config: NgApplicationInsightsConfig,
@@ -43,7 +47,7 @@ export class NgApplicationInsightsService {
       this.appInsights.trackPageView({
         name,
         uri,
-        properties: { 'Tenant ID': this.tenantId }
+        properties: this.customProperties,
       });
     }
   }
@@ -53,7 +57,10 @@ export class NgApplicationInsightsService {
     customProperties?: { [key: string]: any }
   ): void {
     if (this.config.enabled) {
-      customProperties['Tenant ID'] = this.tenantId;
+      customProperties = {
+        ...customProperties,
+        ...this.customProperties,
+      }
       this.appInsights.trackEvent(event, customProperties);
     }
   }
@@ -61,16 +68,15 @@ export class NgApplicationInsightsService {
   trackException(error: Error): void {
     const exception: IExceptionTelemetry = {
       exception: error,
-      properties: { 'Tenant ID': this.tenantId },
+      properties: this.customProperties,
     };
     if (this.config.enabled) {
       this.appInsights.trackException(exception);
     }
   }
 
-  setTenantId(tenantId: String): void {
-    if (this.config.whiteLabel)
-      this.tenantId = tenantId;
+  setCustomProperty(property: string, value: any): void {
+    this.customProperties[property] = value;
   }
 
   private createRouterSubscription(): void {

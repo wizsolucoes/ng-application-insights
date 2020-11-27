@@ -24,7 +24,7 @@ export class NgApplicationInsightsErrorHandler extends ErrorHandler {
     this.ngApplicationInsightsService.trackException(error);
   }
 
-  setTenantIdForApplication(tenantId: string): void {
-    this.ngApplicationInsightsService.setTenantId(tenantId);
+  setCustomPropertyForApplication(property: string, value: any): void {
+    this.ngApplicationInsightsService.setCustomProperty(property, value);
   }
 }

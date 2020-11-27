@@ -70,26 +70,6 @@ describe('NgApplicationInsightsService', () => {
       router = TestBed.inject(Router);
     });
 
-    it("should call any track function with custom property 'Tenant ID' as null", () => {
-      // Given
-      const error = new Error('some error');
-      spyOn(service.appInsights, 'trackException');
-      service.setTenantId('tenant-id');
-
-      // When
-      service.trackException(error);
-
-      // Then
-      const exception: IExceptionTelemetry = {
-        exception: error,
-        properties: { 'Tenant ID': null },
-      };
-
-      expect(service.appInsights.trackException).toHaveBeenCalledWith(
-        exception
-      );
-    });
-
     it('should call trackPageView on navigation', fakeAsync(() => {
       // Given
       spyOn(service.appInsights, 'trackPageView');
@@ -115,7 +95,7 @@ describe('NgApplicationInsightsService', () => {
       // Then
       const exception: IExceptionTelemetry = {
         exception: error,
-        properties: { 'Tenant ID': null },
+        properties: {},
       };
 
       expect(service.appInsights.trackException).toHaveBeenCalledWith(
@@ -133,7 +113,7 @@ describe('NgApplicationInsightsService', () => {
       // Then
       expect(service.appInsights.trackEvent).toHaveBeenCalledWith(
         { name: 'testEvent' },
-        { foo: 'bar', 'Tenant ID': null }
+        { foo: 'bar' }
       );
     });
   });
@@ -162,7 +142,7 @@ describe('NgApplicationInsightsService', () => {
     it('should call trackPageView on navigation', fakeAsync(() => {
       // Given
       spyOn(service.appInsights, 'trackPageView');
-      service.setTenantId('tenant-id');
+      service.setCustomProperty('SomeProperty', 'some-value');
 
       // When
       fixture.ngZone.run(() => {
@@ -174,7 +154,7 @@ describe('NgApplicationInsightsService', () => {
       expect(service.appInsights.trackPageView).toHaveBeenCalledWith({
         name: null,
         uri: '/',
-        properties: { 'Tenant ID': 'tenant-id' }
+        properties: { 'SomeProperty': 'some-value' }
       });
     }));
 
@@ -182,7 +162,7 @@ describe('NgApplicationInsightsService', () => {
       // Given
       const error = new Error('some error');
       spyOn(service.appInsights, 'trackException');
-      service.setTenantId('tenant-id');
+      service.setCustomProperty('SomeProperty', 'some-value');
 
       // When
       service.trackException(error);
@@ -191,7 +171,7 @@ describe('NgApplicationInsightsService', () => {
       const exception: IExceptionTelemetry = {
         exception: error,
         properties: {
-          'Tenant ID': 'tenant-id',
+          'SomeProperty': 'some-value',
         }
       };
 
@@ -203,7 +183,7 @@ describe('NgApplicationInsightsService', () => {
     it('should call trackEvent with event and custom properties', () => {
       // Given
       spyOn(service.appInsights, 'trackEvent');
-      service.setTenantId('tenant-id');
+      service.setCustomProperty('SomeProperty', 'some-value');
 
       // When
       service.trackEvent({ name: 'testEvent' }, { foo: 'bar' });
@@ -211,7 +191,7 @@ describe('NgApplicationInsightsService', () => {
       // Then
       expect(service.appInsights.trackEvent).toHaveBeenCalledWith(
         { name: 'testEvent' },
-        { foo: 'bar', 'Tenant ID': 'tenant-id' }
+        { foo: 'bar', 'SomeProperty': 'some-value' }
       );
     });
   });
