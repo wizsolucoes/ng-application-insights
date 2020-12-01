@@ -41,8 +41,9 @@ alterar a função 'loadConfiguration()' no arquivo `app.component.ts`:
 private loadConfiguration(): Observable<AppConfiguration> {
   this.configurationService.tenantId = this.whoami();
 
-  // tenantId é configurado para utilização do AppInsights
-  this.errorHandler.setTenantIdForApplication(
+  // Tenant ID é configurado para utilização do AppInsights
+  this.errorHandler.setCustomPropertyForApplication(
+    'Tenant ID',
     this.configurationService.tenantId
   );
 
