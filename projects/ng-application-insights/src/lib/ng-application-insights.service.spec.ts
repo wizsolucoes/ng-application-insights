@@ -53,7 +53,6 @@ describe('NgApplicationInsightsService', () => {
     const mockAICOnfig = new NgApplicationInsightsConfig();
     mockAICOnfig.enabled = true;
     mockAICOnfig.instrumentationKey = '';
-    mockAICOnfig.whiteLabel = false;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -122,7 +121,7 @@ describe('NgApplicationInsightsService', () => {
     const mockAICOnfig = new NgApplicationInsightsConfig();
     mockAICOnfig.enabled = true;
     mockAICOnfig.instrumentationKey = '';
-    mockAICOnfig.whiteLabel = true;
+    mockAICOnfig.properties = {};
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -142,7 +141,7 @@ describe('NgApplicationInsightsService', () => {
     it('should call trackPageView on navigation', fakeAsync(() => {
       // Given
       spyOn(service.appInsights, 'trackPageView');
-      service.setCustomProperty('SomeProperty', 'some-value');
+      service.setCustomProperties({ 'SomeProperty': 'some-value' });
 
       // When
       fixture.ngZone.run(() => {
@@ -162,7 +161,7 @@ describe('NgApplicationInsightsService', () => {
       // Given
       const error = new Error('some error');
       spyOn(service.appInsights, 'trackException');
-      service.setCustomProperty('SomeProperty', 'some-value');
+      service.setCustomProperties({ 'SomeProperty': 'some-value' });
 
       // When
       service.trackException(error);
@@ -183,7 +182,7 @@ describe('NgApplicationInsightsService', () => {
     it('should call trackEvent with event and custom properties', () => {
       // Given
       spyOn(service.appInsights, 'trackEvent');
-      service.setCustomProperty('SomeProperty', 'some-value');
+      service.setCustomProperties({ 'SomeProperty': 'some-value' });
 
       // When
       service.trackEvent({ name: 'testEvent' }, { foo: 'bar' });
@@ -200,7 +199,7 @@ describe('NgApplicationInsightsService', () => {
     const mockAICOnfig = new NgApplicationInsightsConfig();
     mockAICOnfig.enabled = false;
     mockAICOnfig.instrumentationKey = '';
-    mockAICOnfig.whiteLabel = !!Math.round(Math.random());
+    mockAICOnfig.properties = {};
 
     beforeEach(() => {
       TestBed.configureTestingModule({

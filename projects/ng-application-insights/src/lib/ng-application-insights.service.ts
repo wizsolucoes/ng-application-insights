@@ -15,7 +15,7 @@ interface ICustomProperties {
 export class NgApplicationInsightsConfig {
   enabled = true;
   instrumentationKey = '';
-  whiteLabel = false;
+  properties: ICustomProperties = {};
 }
 
 @Injectable({
@@ -40,6 +40,11 @@ export class NgApplicationInsightsService {
       this.appInsights.loadAppInsights();
       this.createRouterSubscription();
     }
+
+    this.customProperties = {
+      ...this.customProperties,
+      ...config.properties,
+    };
   }
 
   trackPageView(name?: string, uri?: string): void {
@@ -75,8 +80,11 @@ export class NgApplicationInsightsService {
     }
   }
 
-  setCustomProperty(property: string, value: any): void {
-    this.customProperties[property] = value;
+  setCustomProperties(properties: ICustomProperties): void {
+    this.customProperties = {
+      ...this.customProperties,
+      ...properties
+    };
   }
 
   private createRouterSubscription(): void {
