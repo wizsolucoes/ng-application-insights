@@ -26,10 +26,7 @@ Após a finalização da execução do schematic, deve-se customizar o objeto de
       enabled: environment.production,
 
       // String que corresponda à chave de instrumentação da Application Insights.
-      instrumentationKey: 'sua-chave-aqui',
-
-      // Booleano para determinar se a aplicação é 'White Label'. Default: false
-      whiteLabel: false,
+      instrumentationKey: 'sua-chave-aqui'
     }),
   ],
 ```
@@ -42,10 +39,9 @@ private loadConfiguration(): Observable<AppConfiguration> {
   this.configurationService.tenantId = this.whoami();
 
   // Tenant ID é configurado para utilização do AppInsights
-  this.errorHandler.setCustomPropertyForApplication(
-    'Tenant ID',
-    this.configurationService.tenantId
-  );
+  this.appInsightsService.setCustomProperties({
+    'Tenant ID': this.configurationService.tenantId,
+  });
 
   return this.configurationService.getConfig();
 }
