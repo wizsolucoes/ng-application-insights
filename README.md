@@ -27,8 +27,25 @@ Após a finalização da execução do schematic, deve-se customizar o objeto de
 
       // String que corresponda à chave de instrumentação da Application Insights.
       instrumentationKey: 'sua-chave-aqui',
+
+      // Objeto de custom properties para o AppInsights
+      properties: {
+        'Some property': 'value', // Qualquer tipo de valor é aceito
+        ...
+      }
     }),
   ],
+```
+
+Além de poder passar as propriedades customizadas no momento da instância, o usuário também pode
+acrescentar novas propriedades utilizando a função 'setCustomProperties':
+
+```typescript
+// Tenant ID é configurado para utilização do AppInsights
+this.appInsightsService.setCustomProperties({
+  'New Property': 'value', // Qualquer tipo de valor é aceito
+});
+
 ```
 
 ## Desenvolvimento, por onde começar
