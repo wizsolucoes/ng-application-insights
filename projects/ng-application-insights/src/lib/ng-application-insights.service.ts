@@ -80,6 +80,80 @@ export class NgApplicationInsightsService {
     }
   }
 
+  trackPageViewPerformance(name?: string, uri?: string): void {
+    if (this.config.enabled) {
+      this.appInsights.trackPageViewPerformance({
+        name,
+        uri,
+        properties: this.customProperties
+      });
+    }
+  }
+
+  trackTrace(message?: string): void {
+    if (this.config.enabled) {
+      this.appInsights.trackTrace({
+        message,
+        properties: this.customProperties
+      });
+    }
+  }
+
+  trackMetric(name?: string, average?: number): void {
+    if (this.config.enabled) {
+      this.appInsights.trackMetric({
+        name,
+        average,
+        properties: this.customProperties
+      });
+    }
+  }
+
+  trackDependencyData(name?: string, id?: string, responseCode?: number): void {
+    if (this.config.enabled) {
+      this.appInsights.trackDependencyData({
+        id,
+        responseCode,
+        name,
+        properties: this.customProperties
+      });
+    }
+  }
+
+  startTrackPage(pageName?: string): void {
+    if (this.config.enabled) {
+      this.appInsights.startTrackPage(pageName);
+    }
+  }
+
+  stopTrackPage(pageName?: string, url?: string): void {
+    if (this.config.enabled) {
+      this.appInsights.stopTrackPage(pageName, url, this.customProperties);
+    }
+  }
+
+  startTrackEvent(name?: string): void {
+    if (this.config.enabled) {
+      this.appInsights.startTrackEvent(name);
+    }
+  }
+
+  stopTrackEvent(name?: string, measurements?: any): void {
+    if (this.config.enabled) {
+      this.appInsights.stopTrackEvent(
+        name,
+        this.customProperties,
+        measurements
+      );
+    }
+  }
+
+  flush(): void {
+    if (this.config.enabled) {
+      this.appInsights.flush();
+    }
+  }
+
   setCustomProperties(properties: ICustomProperties): void {
     this.customProperties = {
       ...this.customProperties,
