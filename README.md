@@ -26,25 +26,26 @@ Após a finalização da execução do schematic, deve-se customizar o objeto de
       enabled: environment.production,
 
       // String que corresponda à chave de instrumentação da Application Insights.
-      instrumentationKey: 'sua-chave-aqui'
+      instrumentationKey: 'sua-chave-aqui',
+
+      // Objeto de custom properties para o AppInsights
+      properties: {
+        'Some property': 'value', // Qualquer tipo de valor é aceito
+        ...
+      }
     }),
   ],
 ```
 
-No caso de aplicações 'White Label', é necessário configurar o valor do 'Tenant ID' para o AppInsights. Um exemplo de como configurar o 'Tenant ID', é
-alterar a função 'loadConfiguration()' no arquivo `app.component.ts`:
+Além de poder passar as propriedades customizadas no momento da instância, o usuário também pode
+acrescentar novas propriedades utilizando a função 'setCustomProperties':
 
 ```typescript
-private loadConfiguration(): Observable<AppConfiguration> {
-  this.configurationService.tenantId = this.whoami();
+// Tenant ID é configurado para utilização do AppInsights
+this.appInsightsService.setCustomProperties({
+  'New Property': 'value', // Qualquer tipo de valor é aceito
+});
 
-  // Tenant ID é configurado para utilização do AppInsights
-  this.appInsightsService.setCustomProperties({
-    'Tenant ID': this.configurationService.tenantId,
-  });
-
-  return this.configurationService.getConfig();
-}
 ```
 
 ## Desenvolvimento, por onde começar
