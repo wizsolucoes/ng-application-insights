@@ -28,7 +28,7 @@ Após a finalização da execução do schematic, deve-se customizar o objeto de
       // String que corresponda à chave de instrumentação da Application Insights.
       instrumentationKey: 'sua-chave-aqui',
 
-      // Objeto de custom properties para o AppInsights
+      // Objeto de custom properties para o AppInsights. A propriedade é opcional.
       properties: {
         'Some property': 'value', // Qualquer tipo de valor é aceito
         ...
