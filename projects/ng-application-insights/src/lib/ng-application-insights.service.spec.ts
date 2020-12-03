@@ -47,27 +47,6 @@ describe('NgApplicationInsightsService', () => {
     it('should instantiate ApplicationInsights when constucted', () => {
       expect(service.appInsights).toBeTruthy();
     });
-  });
-
-  describe('service is enabled for non white label applications', () => {
-    const mockAICOnfig = new NgApplicationInsightsConfig();
-    mockAICOnfig.enabled = true;
-    mockAICOnfig.instrumentationKey = '';
-
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [RouterTestingModule],
-        providers: [
-          {
-            provide: NgApplicationInsightsConfig,
-            useValue: mockAICOnfig,
-          },
-        ],
-      });
-      service = TestBed.inject(NgApplicationInsightsService);
-      fixture = TestBed.createComponent(NgApplicationInsightsComponent);
-      router = TestBed.inject(Router);
-    });
 
     it('should call trackPageView on navigation', fakeAsync(() => {
       // Given
@@ -102,7 +81,7 @@ describe('NgApplicationInsightsService', () => {
       );
     });
 
-    it('should call trackEvent with event and custom properties', () => {
+    it('should call trackEvent with event', () => {
       // Given
       spyOn(service.appInsights, 'trackEvent');
 
@@ -115,82 +94,129 @@ describe('NgApplicationInsightsService', () => {
         { foo: 'bar' }
       );
     });
-  });
 
-  describe('service is enabled for white label applications', () => {
-    const mockAICOnfig = new NgApplicationInsightsConfig();
-    mockAICOnfig.enabled = true;
-    mockAICOnfig.instrumentationKey = '';
-    mockAICOnfig.properties = {};
-
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        imports: [RouterTestingModule],
-        providers: [
-          {
-            provide: NgApplicationInsightsConfig,
-            useValue: mockAICOnfig,
-          },
-        ],
-      });
-      service = TestBed.inject(NgApplicationInsightsService);
-      fixture = TestBed.createComponent(NgApplicationInsightsComponent);
-      router = TestBed.inject(Router);
-    });
-
-    it('should call trackPageView on navigation', fakeAsync(() => {
+    it('should call trackPageViewPerfomance with custom properties', () => {
       // Given
-      spyOn(service.appInsights, 'trackPageView');
-      service.setCustomProperties({ 'SomeProperty': 'some-value' });
+      spyOn(service.appInsights, 'trackPageViewPerformance');
+
+      service.setCustomProperties({
+        'SomeProperty': 'some-value',
+      });
 
       // When
-      fixture.ngZone.run(() => {
-        router.initialNavigation();
-      });
+      service.trackPageViewPerformance(
+        'testPageViewPerformance',
+        'example.uri'
+      )
 
       // Then
-      tick();
-      expect(service.appInsights.trackPageView).toHaveBeenCalledWith({
-        name: null,
-        uri: '/',
-        properties: { 'SomeProperty': 'some-value' }
-      });
-    }));
-
-    it('should create IExceptionTelemetry and call appInsights trackException', () => {
-      // Given
-      const error = new Error('some error');
-      spyOn(service.appInsights, 'trackException');
-      service.setCustomProperties({ 'SomeProperty': 'some-value' });
-
-      // When
-      service.trackException(error);
-
-      // Then
-      const exception: IExceptionTelemetry = {
-        exception: error,
+      expect(service.appInsights.trackPageViewPerformance).toHaveBeenCalledWith({
+        name: 'testPageViewPerformance',
+        uri: 'example.uri',
         properties: {
           'SomeProperty': 'some-value',
-        }
-      };
+        },
+      });
+    });
 
-      expect(service.appInsights.trackException).toHaveBeenCalledWith(
-        exception
+    it('should call trackTrace with a trace message', () => {
+      // Given
+      spyOn(service.appInsights, 'trackTrace');
+
+      // When
+      service.trackTrace('some-trace-message');
+
+      // Then
+      expect(service.appInsights.trackTrace).toHaveBeenCalledWith({
+        message: 'some-trace-message',
+        properties: {},
+      });
+    });
+
+    it('should call trackMetric with an average', () => {
+      // Given
+      spyOn(service.appInsights, 'trackMetric');
+
+      // When
+      service.trackMetric('some-name', 1);
+
+      // Then
+      expect(service.appInsights.trackMetric).toHaveBeenCalledWith({
+        name: 'some-name',
+        average: 1,
+        properties: {}
+      });
+    });
+
+    it('should call trackDependencyData with an ID and a Response Code', () => {
+      // Given
+      spyOn(service.appInsights, 'trackDependencyData');
+
+      // When
+      service.trackDependencyData('some-name', 'some-id', 1);
+
+      // Then
+      expect(service.appInsights.trackDependencyData).toHaveBeenCalledWith({
+        id: 'some-id',
+        responseCode: 1,
+        name: 'some-name',
+        properties: {}
+      });
+    });
+
+    it('should call startTrackPage with page name', () => {
+      // Given
+      spyOn(service.appInsights, 'startTrackPage');
+
+      // When
+      service.startTrackPage('page-name');
+
+      // Then
+      expect(service.appInsights.startTrackPage).toHaveBeenCalledWith(
+        'page-name'
       );
     });
 
-    it('should call trackEvent with event and custom properties', () => {
+    it('should call stopTrackPage with page name and URL', () => {
       // Given
-      spyOn(service.appInsights, 'trackEvent');
-      service.setCustomProperties({ 'SomeProperty': 'some-value' });
+      spyOn(service.appInsights, 'stopTrackPage');
 
       // When
-      service.trackEvent({ name: 'testEvent' }, { foo: 'bar' });
+      service.stopTrackPage('page-name', 'example.url');
 
       // Then
-      expect(service.appInsights.trackEvent).toHaveBeenCalledWith(
-        { name: 'testEvent' },
-        { foo: 'bar', 'SomeProperty': 'some-value' }
+      expect(service.appInsights.stopTrackPage).toHaveBeenCalledWith(
+        'page-name',
+        'example.url',
+        {}
+      );
+    });
+
+    it('should call startTrackEvent with event name', () => {
+      // Given
+      spyOn(service.appInsights, 'startTrackEvent');
+
+      // When
+      service.startTrackEvent('event-name');
+
+      // Then
+      expect(service.appInsights.startTrackEvent).toHaveBeenCalledWith(
+        'event-name'
+      );
+    });
+
+    it('should call stopTrackEvent with event name and measurements', () => {
+      // Given
+      spyOn(service.appInsights, 'stopTrackEvent');
+
+      // When
+      service.stopTrackEvent('event-name', { 'some-measurement': 1 });
+
+      // Then
+      expect(service.appInsights.stopTrackEvent).toHaveBeenCalledWith(
+        'event-name',
+        {},
+        { 'some-measurement': 1 }
       );
     });
   });
@@ -241,5 +267,77 @@ describe('NgApplicationInsightsService', () => {
       // Then
       expect(service.appInsights).not.toBeTruthy();
     }));
+
+    it('should NOT call trackPageViewPerfomance', () => {
+      // Given
+      service.setCustomProperties({
+        'SomeProperty': 'some-value',
+      });
+
+      // When
+      service.trackPageViewPerformance(
+        'testPageViewPerformance',
+        'example.uri'
+      )
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
+
+    it('should NOT call trackTrace', () => {
+      // When
+      service.trackTrace('some-trace-message');
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
+
+    it('should NOT call trackMetric', () => {
+      // When
+      service.trackMetric('some-name', Math.random());
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
+
+    it('should NOT call trackDependencyData', () => {
+      // When
+      service.trackDependencyData('some-name', 'some-id', Math.random());
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
+
+    it('should NOT call startTrackPage', () => {
+      // When
+      service.startTrackPage('page-name');
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
+
+    it('should NOT call stopTrackPage', () => {
+      // When
+      service.stopTrackPage('page-name', 'example.url');
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
+
+    it('should NOT call startTrackEvent', () => {
+      // When
+      service.startTrackEvent('event-name');
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
+
+    it('should NOT call stopTrackEvent', () => {
+      // When
+      service.stopTrackEvent('event-name', { 'some-measurement': 1 });
+
+      // Then
+      expect(service.appInsights).not.toBeTruthy();
+    });
   });
 });
