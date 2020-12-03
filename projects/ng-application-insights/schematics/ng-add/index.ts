@@ -83,6 +83,7 @@ function installAppInsights() {
       `NgApplicationInsightsModule.forRoot({
       enabled: true,
       instrumentationKey: '',
+      properties: {}, // Propriedade opcional. Pode ser removida, caso não seja necessária.
     })`,
       '@wizsolucoes/ng-application-insights',
     ) as InsertChange[];
