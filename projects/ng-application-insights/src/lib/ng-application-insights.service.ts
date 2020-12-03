@@ -15,7 +15,7 @@ interface ICustomProperties {
 export class NgApplicationInsightsConfig {
   enabled = true;
   instrumentationKey = '';
-  properties: ICustomProperties = {};
+  properties?: ICustomProperties = {};
 }
 
 @Injectable({
