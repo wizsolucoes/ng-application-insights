@@ -93,7 +93,7 @@ cd ../../../
 npm run build
 
 # Gerar tarball e.g. wizsolucoes-ng-application-insights-1.0.0.tgz
-cd dist/
+cd dist/ng-application-insights
 
 npm pack
 ```
@@ -101,7 +101,7 @@ npm pack
 2. Instale e execute o schematic na raiz de qualquer aplicação
 ```bash
 # Instalar lib + schematics
-npm i --no-save ../path/to/ng-application-insights/wizsolucoes-ng-application-insights-1.0.0.tgz
+npm i --no-save ../path/to/ng-application-insights/wizsolucoes-ng-application-insights-x.x.x.tgz # substitue x.x.x é a versão em projects/ng-application-insights/package.json
 
 # Executar o schematic
 ng g @wizsolucoes/ng-application-insights:ng-add
