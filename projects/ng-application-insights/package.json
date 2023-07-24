@@ -17,13 +17,13 @@
     "postbuild": "npm run copy:collection && npm run copy:readme"
   },
   "peerDependencies": {
-    "@microsoft/applicationinsights-web": "^2.7.2"
+    "@microsoft/applicationinsights-web": "^3.0.2"
   },
   "dependencies": {
     "tslib": "^2.0.0"
   },
   "devDependencies": {
-    "@microsoft/applicationinsights-web": "^2.7.2"
+    "@microsoft/applicationinsights-web": "^3.0.2"
   },
   "schematics": "./schematics/collection.json",
   "ng-add": {
