@@ -20,7 +20,7 @@
     "@microsoft/applicationinsights-web": "^3.0.2"
   },
   "dependencies": {
-    "tslib": "^2.0.0"
+    "tslib": "^2.6.0"
   },
   "devDependencies": {
     "@microsoft/applicationinsights-web": "^3.0.2"
