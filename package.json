@@ -28,7 +28,7 @@
     "@angular/cli": "^16.1.5",
     "@angular/compiler-cli": "~16.1.6",
     "@microsoft/applicationinsights-web": "^3.0.2",
-    "@types/jasmine": "~3.6.0",
+    "@types/jasmine": "~4.3.5",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^0.0.28",
