@@ -34,7 +34,7 @@ stages:
               workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights/schematics'
 
           # Build
-          - script: npx ng build ng-application-insights --prod
+          - script: npx ng build ng-application-insights 
             displayName: 'Build library'
           - task: Npm@1
             displayName: "Build package"
@@ -76,7 +76,7 @@ stages:
               workingDir: '$(Build.SourcesDirectory)/projects/ng-application-insights/schematics'
 
           # Build
-          - script: npx ng build ng-application-insights --prod
+          - script: npx ng build ng-application-insights 
             displayName: 'Build library'
           - task: Npm@1
             displayName: "Build package"
