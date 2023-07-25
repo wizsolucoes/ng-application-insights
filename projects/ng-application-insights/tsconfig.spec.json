@@ -6,5 +6,6 @@
     "types": ["jasmine"]
   },
   "files": [],
-  "include": ["**/*.spec.ts", "**/*.d.ts"]
+  "include": ["**/*.spec.ts"],
+  "exclude": ["**/node_modules/**"]
 }

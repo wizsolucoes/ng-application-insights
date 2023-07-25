@@ -29,7 +29,10 @@
               "zone.js/testing"
             ],
             "tsConfig": "projects/ng-application-insights/tsconfig.spec.json",
-            "karmaConfig": "projects/ng-application-insights/karma.conf.js"
+            "karmaConfig": "projects/ng-application-insights/karma.conf.js",
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         },
         "lint": {
