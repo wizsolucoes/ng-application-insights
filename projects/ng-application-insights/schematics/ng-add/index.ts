@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { Rule, SchematicContext, Tree, chain, SchematicsException } from '@angular-devkit/schematics';
 import { InsertChange } from '@schematics/angular/utility/change';
@@ -13,6 +13,7 @@ import {
   addPackageJsonDependency,
 } from '@schematics/angular/utility/dependencies';
 import { createDefaultPath } from "@schematics/angular/utility/workspace";
+import ts = require('@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript');
 
 let defaultPath: string;
 

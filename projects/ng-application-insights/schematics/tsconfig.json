@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "tsconfig",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "lib": ["ES2022", "dom"],
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",
@@ -19,16 +16,9 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strictNullChecks": true,
-    "target": "es6",
-    "types": [
-      "jasmine",
-      "node"
-    ]
+    "target": "ES2022",
+    "types": ["jasmine", "node"]
   },
-  "include": [
-    "**/*"
-  ],
-  "exclude": [
-    "*/files/**/*"
-  ]
+  "include": ["**/*"],
+  "exclude": ["*/files/**/*"]
 }
