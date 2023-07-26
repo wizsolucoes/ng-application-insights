@@ -1,6 +1,6 @@
 {
   "name": "ng-application-insights",
-  "version": "0.1.0",
+  "version": "1.2.2",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
