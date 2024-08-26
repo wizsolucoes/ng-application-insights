@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import {
   ApplicationInsights,
+  IConfig,
+  IConfiguration,
   IEventTelemetry,
   IExceptionTelemetry,
+  ITelemetryItem,
+  
 } from '@microsoft/applicationinsights-web';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 interface ICustomProperties {
   [key: string]: any;
@@ -16,14 +19,17 @@ export class NgApplicationInsightsConfig {
   enabled = true;
   instrumentationKey = '';
   properties?: ICustomProperties = {};
-}
+  extraConfig?: IConfiguration & IConfig = {};
+  disabledUrls?: string[] = [];
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class NgApplicationInsightsService {
-  appInsights: ApplicationInsights;
+  public appInsights!: ApplicationInsights;
   private customProperties: ICustomProperties = {};
+
 
   constructor(
     private config: NgApplicationInsightsConfig,
@@ -34,8 +40,18 @@ export class NgApplicationInsightsService {
         config: {
           instrumentationKey: this.config.instrumentationKey,
           enableAutoRouteTracking: true,
+          ...this.config.extraConfig,
         },
       });
+
+       this.appInsights.addTelemetryInitializer((envelope: ITelemetryItem) => {
+         const dataBase = JSON.stringify(envelope.baseData);
+          const disabled = this.config.disabledUrls || [];
+         if ( disabled.some((item) => dataBase.includes(item))) {
+            return false;
+          }
+          return true;
+       });
 
       this.appInsights.loadAppInsights();
       this.createRouterSubscription();
